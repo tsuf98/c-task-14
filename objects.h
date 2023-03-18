@@ -5,7 +5,8 @@ enum param_type
 {
     reg,
     num,
-    str
+    str,
+    label
 };
 
 enum param_scope
@@ -31,11 +32,18 @@ typedef struct Instruction_obj
 
 } Instruction_obj;
 
+#define STR_TYPE 1
+#define NUM_TYPE 2
+
+#define ENT_SCOPE 10
+#define EXT_SCOPE 20
 
 typedef struct Data_obj
 {
     int lines_no;
     char label[WORD_LENGTH]; 
-    Param data;
+    int * value;
+    int scope;
+    int type; 
 } Data_obj;
 

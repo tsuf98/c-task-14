@@ -31,3 +31,8 @@
 #define ENTRY ".entry"
 #define STRING ".string"
 #define EXTERN ".extern"
+
+#define LABEL_SEPARATOR ':'
+#define COMMENT ';'
+
+#define ARRAY_SEPARATOR ","

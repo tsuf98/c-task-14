@@ -46,7 +46,7 @@ void compile(char *filename)
     /*Parse to Line struct*/
     source = fopen(am_filename, "r");
 
-    line_length = count_lines(source, &is_invalid);                         /**/
+    line_length = count_lines(source, &is_invalid);
     instructions = parse_instructions(source, line_length[0], &is_invalid); /**/
     data = parse_data(source, line_length[1], &is_invalid);
     free(line_length);
