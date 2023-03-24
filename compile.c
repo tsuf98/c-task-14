@@ -43,17 +43,13 @@ void compile(char *filename)
     pre_process(source, am_filename);
     fclose(source);
 
-    /*Parse to Line struct*/
+    /*Parses to Line struct AND validates it*/
     source = fopen(am_filename, "r");
 
     line_length = count_lines(source, &is_invalid);
-    instructions = parse_instructions(source, line_length[0], &is_invalid); /**/
     data = parse_data(source, line_length[1], &is_invalid);
-    free(line_length);
-
-    /*Validate*/
-    validate_instructions(instructions, &is_invalid); /**/
-    validate_data(data, &is_invalid);                 /**/
+    instructions = parse_instructions(source, data, line_length[0], &is_invalid);
+    free(line_length);  
 
     if (is_invalid)
     {
@@ -63,7 +59,7 @@ void compile(char *filename)
         return;
     }
 
-    /*translate to binary*/
+    /*translates to binary*/
     ob_filename = malloc(sizeof(char) * (strlen(filename) + 4));
     strcat(strcpy(as_filename, filename), ".ob");
 

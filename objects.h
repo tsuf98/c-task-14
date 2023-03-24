@@ -3,31 +3,27 @@
 
 enum param_type
 {
-    reg,
-    num,
-    str,
-    label
-};
-
-enum param_scope
-{
-    internal,
-    external
+    null,
+    immediate,
+    label,
+    jump,
+    reg
 };
 
 typedef struct Param
 {
-    char value[WORD_LENGTH];
+    int value;
+    char instruction_label[WORD_LENGTH];
     enum param_type type;
-    enum param_scope scope;
 } Param;
 
 typedef struct Instruction_obj
 {
     int lines_no;
     char label[WORD_LENGTH]; 
-    char command[COMMAND_LENGTH]; 
-    Param target;
+    int command;
+    char jumping_label[WORD_LENGTH];
+    Param source;
     Param destination;
 
 } Instruction_obj;
@@ -45,5 +41,6 @@ typedef struct Data_obj
     int * value;
     int scope;
     int type; 
+    int exists;
 } Data_obj;
 

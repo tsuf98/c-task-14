@@ -1,6 +1,6 @@
 #include "objects.h"
 
-Instruction_obj *parse_instructions(FILE *fileptr, int length, int * is_invalid);
+Instruction_obj *parse_instructions(FILE *fileptr, Data_obj * data, int length, int * is_invalid);
 
 Data_obj *parse_data(FILE *fileptr, int length, int * is_invalid);
 

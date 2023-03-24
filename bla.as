@@ -2,14 +2,15 @@
         ; file ps.as
 .entry LENGTH
 .extern         W
-MAIN: mov r3 ,LENGTH
-LOOP: jmp L1(#-1,r6)
+MM: inc LENGTH
+MAN:  mov r7 ,LENGTH
+LOOP: jmp L1(#-123,r6)
 mcr m1
-sub r1, r4
+sub r6, r4
 bne END
 endmcr
-prn #-5
-bne LOOP(r4,r3)
+prn #-55
+bne LOOP(r5,r7)
 m1
 mcr m3
 sub r1, r4
