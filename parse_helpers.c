@@ -202,14 +202,14 @@ void look_for_params(char *line, char *jumping_label, Param *source, Param *dest
         else if (line[i] == OPERAND_SEPARATOR)
         {
             is_space_valid = 1;
-            parse_param(word, source, data, line_no, is_invalid);
+            parse_param(word, source, data, line_no, is_invalid, jumping_label);
             memset(word, 0, sizeof(word));
             j = 0;
         }
         else if (line[i] == JUMP_END_BRACKET)
         {
             is_space_valid = 1;
-            parse_param(word, dest, data, line_no, is_invalid);
+            parse_param(word, dest, data, line_no, is_invalid, jumping_label);
             memset(word, 0, sizeof(word));
             j = 0;
         }
@@ -226,7 +226,7 @@ void look_for_params(char *line, char *jumping_label, Param *source, Param *dest
     }
     if (strlen(word))
     {
-        parse_param(word, dest, data, line_no, is_invalid);
+        parse_param(word, dest, data, line_no, is_invalid, jumping_label);
     }
     cut_beginning(line, i);
 }
@@ -242,10 +242,6 @@ Data_obj *find_data_by_label(Data_obj *data, int *length, char *label)
         }
     }
     strcpy(data[i].label, label);
-    data[i].type = 0;
-    data[i].lines_no = 0;
-    data[i].scope = 0;
-    data[i].value = 0;
     data[i].exists = 1;
     *length = i + 1;
     return &data[i];
@@ -376,7 +372,7 @@ int is_empty_line(char *line)
 }
 
 
-void parse_param(char *word, Param *param, Data_obj *labels, int line_number, int *is_invalid)
+void parse_param(char *word, Param *param, Data_obj *labels, int line_number, int *is_invalid, char * jumping_label)
 {
     int index;
     if (word[0] == IMMEDIATE_SEPARATOR)
@@ -396,14 +392,16 @@ void parse_param(char *word, Param *param, Data_obj *labels, int line_number, in
         else
         {
             index = index_of_data_label(word, labels);
-             param->type = label;
+            
             if (index != -1)
-            {
+            { 
+                param->type = label;
                 param->value = index;
+                param->scope = labels[index].scope == EXT_SCOPE ? external_scope : labels[index].scope == ENT_SCOPE ? entry_scope : immediate_scope;
             }
             else
             {
-                strcpy(param->instruction_label, word);
+                strcpy(jumping_label, word);
             }
         }
     }

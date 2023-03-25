@@ -69,11 +69,11 @@ void compile(char *filename)
     ent_filename = malloc(sizeof(char) * (strlen(filename) + 5));
     strcat(strcpy(ent_filename, filename), ".ent");
 
-    save_internals(ent_filename, instructions, data); /**/
+    save_internals(ent_filename, data); /**/
 
     /*Saving externals*/
     ext_filename = malloc(sizeof(char) * (strlen(filename) + 5));
-    strcat(strcpy(as_filename, filename), ".ext");
+    strcat(strcpy(ext_filename, filename), ".ext");
 
     save_externals(ext_filename, instructions, data); /**/
 

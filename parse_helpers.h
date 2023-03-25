@@ -47,8 +47,8 @@ int look_for_scope_or_type(char *line);
 /*@param labels a list of data objects*/
 /*@param line_number the line number in the file in which the word appears*/
 /* @param is_invalid validity flag, will set to 1 if the line is invalid */
-void parse_param(char *word, Param *param, Data_obj *labels, int line_number, int *is_invalid);
-
+/* @param jumping_label to assign if exists */
+void parse_param(char *word, Param *param, Data_obj *labels, int line_number, int *is_invalid, char *jumping_label);
 
 /* Finding in arrays */
 
@@ -60,13 +60,11 @@ int index_of_data_label(char *word, Data_obj *labels);
 
 int index_of_registers(char *word);
 
-
 /* String trimming */
 
 void cut_beginning(char *line, int steps);
 
 void trim(char *line);
-
 
 /* Line classification */
 

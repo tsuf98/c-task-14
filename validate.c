@@ -3,7 +3,8 @@
 #include "objects.h"
 #include "commands.h"
 
-enum commands_enum {
+enum commands_enum
+{
     mov,
     cmp,
     add,
@@ -55,7 +56,7 @@ void validate_instruction(Instruction_obj *instruction, int *is_invalid, int lin
     case red:
     case jsr:
     {
-        if (!instruction->jumping_label && (instruction->source.type != null || instruction->destination.type < label)) 
+        if (!instruction->jumping_label && (instruction->source.type != null || instruction->destination.type < label))
         {
             strcpy(invalid_command, commands[instruction->command]);
         }
@@ -94,10 +95,10 @@ void validate_instruction(Instruction_obj *instruction, int *is_invalid, int lin
     }
 }
 
-int find_label(char *label, Instruction_obj *instructions, int length)
+int find_label(char *label, Instruction_obj *instructions)
 {
     int i;
-    for (i = 0; i < length; i++)
+    for (i = 0; instructions[i].exists; i++)
     {
         if (strcmp(instructions[i].label, label) == 0)
         {
@@ -107,26 +108,27 @@ int find_label(char *label, Instruction_obj *instructions, int length)
     return 0;
 }
 
-void validate_label_operand(Instruction_obj *instructions, int length, int *is_invalid)
+int find_label_in_data(char *label, Data_obj *data)
 {
     int i;
-    for (i = 0; i < length; i++)
+    for (i = 0; data[i].exists; i++)
     {
-        if (strlen(instructions[i].jumping_label) && !find_label(instructions[i].jumping_label, instructions, length))
+        if (strcmp(data[i].label, label) == 0)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void validate_label_operand(Instruction_obj *instructions, Data_obj *data, int *is_invalid)
+{
+    int i;
+   for (i = 0; instructions[i].exists; i++)
+    {
+        if (strlen(instructions[i].jumping_label) && !find_label(instructions[i].jumping_label, instructions) && !find_label_in_data(instructions[i].jumping_label, data))
         {
             printf("Error: Unkown jumping label \"%s\".\n", instructions[i].jumping_label);
-            *is_invalid = 1;
-        }
-
-        if (strlen(instructions[i].source.instruction_label) && !find_label(instructions[i].source.instruction_label, instructions, length))
-        {
-            printf("Error: Unkown source label operand \"%s\".\n", instructions[i].source.instruction_label);
-            *is_invalid = 1;
-        }
-
-        if (strlen(instructions[i].destination.instruction_label) && !find_label(instructions[i].destination.instruction_label, instructions, length))
-        {
-            printf("Error: Unkown destination label operand \"%s\".\n", instructions[i].destination.instruction_label);
             *is_invalid = 1;
         }
     }

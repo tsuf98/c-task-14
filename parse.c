@@ -18,7 +18,7 @@ Instruction_obj *parse_instructions(FILE *fileptr, Data_obj *data, int length, i
     Instruction_obj *obj;
     obj_length = line_number = 0;
 
-    obj = malloc(sizeof(Instruction_obj) * length);
+    obj = calloc(length, sizeof(Instruction_obj));
 
     printf("parsing instructions...\n");
     /* parse and assign each line to it's own object*/
@@ -39,10 +39,10 @@ Instruction_obj *parse_instructions(FILE *fileptr, Data_obj *data, int length, i
 
     for (i = 0; i < obj_length; i++)
     {
-        printf("no: %d label: %s (%d) command: %d source: %d-%d jumping label: %s dest: %d-%d i_l %s \n", obj[i].lines_no, obj[i].label, strlen(obj[i].label), obj[i].command, obj[i].source.type, obj[i].source.value, obj[i].jumping_label, obj[i].destination.type, obj[i].destination.value, obj[i].destination.instruction_label);
+        printf("no: %d label: %s (%d) command: %d source: %d-%d jumping label: %s dest: %d-%d \n", obj[i].lines_no, obj[i].label, strlen(obj[i].label), obj[i].command, obj[i].source.type, obj[i].source.value, obj[i].jumping_label, obj[i].destination.type, obj[i].destination.value);
     }
 
-    validate_label_operand(obj, obj_length, is_invalid);
+    validate_label_operand(obj, data, is_invalid);
 
     rewind(fileptr);
     return obj;
@@ -54,7 +54,8 @@ Data_obj *parse_data(FILE *fileptr, int length, int *is_invalid)
     int line_number, obj_length, i, j;
     Data_obj *obj;
     obj_length = line_number = 0;
-    obj = malloc(sizeof(Data_obj) * length);
+    obj = calloc(length, sizeof(Data_obj));
+
 
     printf("parsing data...\n");
 
@@ -206,8 +207,9 @@ void parse_data_line(char *line, int line_number, int *is_invalid, Data_obj *obj
 
 Instruction_obj *parse_instruction_line(char *line, int line_number, int *is_invalid, Data_obj *data)
 {
-    Instruction_obj *instruction = {0};
-    instruction = malloc(sizeof(Instruction_obj));
+    Instruction_obj *instruction;
+    instruction = calloc(1, sizeof(Instruction_obj));
+    instruction->exists = 1;
 
     strcpy(instruction->label, look_for_label(line));
 
@@ -233,7 +235,6 @@ Instruction_obj *parse_instruction_line(char *line, int line_number, int *is_inv
 
     validate_instruction(instruction, is_invalid, line_number);
     instruction->lines_no = count_instruction_lines(instruction);
-    instruction->exists = 1;
 
     return instruction;
 }
@@ -242,6 +243,11 @@ int count_instruction_lines(Instruction_obj *instruction)
 {
     int lines;
     lines = 1;
+
+    if (strlen(instruction->jumping_label))
+    {
+        lines++;
+    }
     if (instruction->source.type == null && instruction->destination.type == null)
     {
         return lines;
@@ -249,10 +255,6 @@ int count_instruction_lines(Instruction_obj *instruction)
     if ((instruction->source.type == null) ^ (instruction->destination.type == null))
     {
         return ++lines;
-    }
-    if (strlen(instruction->jumping_label))
-    {
-        lines++;
     }
     if (instruction->source.type == reg && instruction->destination.type == reg)
     {
