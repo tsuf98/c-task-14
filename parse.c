@@ -9,6 +9,7 @@
 
 void parse_data_line(char *line, int line_number, int *is_invalid, Data_obj *obj, int *objects_length);
 Instruction_obj *parse_instruction_line(char *line, int line_number, int *is_invalid, Data_obj *data);
+int count_instruction_lines(Instruction_obj *instruction);
 
 Instruction_obj *parse_instructions(FILE *fileptr, Data_obj *data, int length, int *is_invalid)
 {
@@ -38,10 +39,10 @@ Instruction_obj *parse_instructions(FILE *fileptr, Data_obj *data, int length, i
 
     for (i = 0; i < obj_length; i++)
     {
-        printf("no: %d label: %s (%d) command: %d source: %d-%d jumping label: %s dest: %d-%d i_l %s \n", i, obj[i].label, strlen(obj[i].label), obj[i].command, obj[i].source.type, obj[i].source.value, obj[i].jumping_label, obj[i].destination.type, obj[i].destination.value, obj[i].destination.instruction_label);
+        printf("no: %d label: %s (%d) command: %d source: %d-%d jumping label: %s dest: %d-%d i_l %s \n", obj[i].lines_no, obj[i].label, strlen(obj[i].label), obj[i].command, obj[i].source.type, obj[i].source.value, obj[i].jumping_label, obj[i].destination.type, obj[i].destination.value, obj[i].destination.instruction_label);
     }
 
-    validate_label_operand(obj,obj_length, is_invalid);
+    validate_label_operand(obj, obj_length, is_invalid);
 
     rewind(fileptr);
     return obj;
@@ -230,9 +231,36 @@ Instruction_obj *parse_instruction_line(char *line, int line_number, int *is_inv
         return instruction;
     }
 
-    validate_instructions(instruction, is_invalid, line_number);
-    /*TODO: set line numbers!!  */
+    validate_instruction(instruction, is_invalid, line_number);
+    instruction->lines_no = count_instruction_lines(instruction);
+    instruction->exists = 1;
+
     return instruction;
 }
 
-/*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*/
+int count_instruction_lines(Instruction_obj *instruction)
+{
+    int lines;
+    lines = 1;
+    if (instruction->source.type == null && instruction->destination.type == null)
+    {
+        return lines;
+    }
+    if ((instruction->source.type == null) ^ (instruction->destination.type == null))
+    {
+        return ++lines;
+    }
+    if (strlen(instruction->jumping_label))
+    {
+        lines++;
+    }
+    if (instruction->source.type == reg && instruction->destination.type == reg)
+    {
+        return ++lines;
+    }
+    else
+    {
+        return lines + 2;
+    }
+}
+/*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*/

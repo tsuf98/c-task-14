@@ -25,6 +25,7 @@ typedef struct Instruction_obj
     char jumping_label[WORD_LENGTH];
     Param source;
     Param destination;
+    unsigned int exists:1;
 
 } Instruction_obj;
 
@@ -41,6 +42,6 @@ typedef struct Data_obj
     int * value;
     int scope;
     int type; 
-    int exists;
+    unsigned int exists:1;
 } Data_obj;
 

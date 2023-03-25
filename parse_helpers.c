@@ -396,10 +396,10 @@ void parse_param(char *word, Param *param, Data_obj *labels, int line_number, in
         else
         {
             index = index_of_data_label(word, labels);
+             param->type = label;
             if (index != -1)
             {
                 param->value = index;
-                param->type = label;
             }
             else
             {

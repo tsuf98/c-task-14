@@ -51,3 +51,8 @@
 
 #define JUMP_START_BRACKET '('
 #define JUMP_END_BRACKET ')'
+
+#define ADDRESS_STARTS_AT 100
+
+#define ZERO "."
+#define ONE "/"

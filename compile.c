@@ -61,13 +61,13 @@ void compile(char *filename)
 
     /*translates to binary*/
     ob_filename = malloc(sizeof(char) * (strlen(filename) + 4));
-    strcat(strcpy(as_filename, filename), ".ob");
+    strcat(strcpy(ob_filename, filename), ".ob");
 
     translate_to_binary(ob_filename, instructions, data); /**/
 
     /*Saving internals */
     ent_filename = malloc(sizeof(char) * (strlen(filename) + 5));
-    strcat(strcpy(as_filename, filename), ".ent");
+    strcat(strcpy(ent_filename, filename), ".ent");
 
     save_internals(ent_filename, instructions, data); /**/
 
@@ -80,9 +80,9 @@ void compile(char *filename)
     /* free everything */
     free(instructions);
     free(data);
+    free(ob_filename);
     /*free(am_filename);
     free(as_filename);
-    free(ob_filename);
     free(ext_filename);
     free(ent_filename);*/
 
